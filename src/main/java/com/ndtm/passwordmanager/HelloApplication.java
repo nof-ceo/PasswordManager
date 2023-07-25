@@ -1,5 +1,7 @@
 package com.ndtm.passwordmanager;
 
+import com.ndtm.passwordmanager.GUI.AuthGui;
+import com.ndtm.passwordmanager.GUI.StageManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,13 +17,8 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        mainStage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("passwordManagerMain.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        scene.setFill(Color.TRANSPARENT);
-        mainStage.initStyle(StageStyle.TRANSPARENT);
-        mainStage.setScene(scene);
-        mainStage.show();
+        StageManager.currentStage = stage;
+        StageManager.openAuthGui();
     }
 
     public static void windowPointSet(double x, double y) {
