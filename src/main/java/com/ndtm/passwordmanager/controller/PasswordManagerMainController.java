@@ -1,7 +1,6 @@
 package com.ndtm.passwordmanager.controller;
 
 import com.ndtm.passwordmanager.GUI.MainGui;
-import com.ndtm.passwordmanager.HelloApplication;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 
