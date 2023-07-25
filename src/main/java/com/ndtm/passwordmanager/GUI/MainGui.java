@@ -1,8 +1,9 @@
 package com.ndtm.passwordmanager.GUI;
 
-public class MainGui {
+public class MainGui extends StageManager {
 
-//    public void windowPointSet(double x, double y) {
-//
-//    }
+    public static void setPointOfWindow(double x, double y) {
+        MainGui.currentStage.setX(x);
+        MainGui.currentStage.setY(y);
+    }
 }
