@@ -14,7 +14,7 @@ public class PasswordManagerMainController {
         double x = (event.getScreenX() - mousePressedX);
         double y = (event.getScreenY() - mousePressedY);
 
-        HelloApplication.windowPointSet(x, y);
+        MainGui.setPointOfWindow(x, y);
     }
 
     @FXML
