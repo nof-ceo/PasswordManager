@@ -7,6 +7,7 @@ module com.ndtm.passwordmanager {
     requires spring.boot.autoconfigure;
     requires spring.boot;
     requires jakarta.persistence;
+    requires spring.context;
 
     opens com.ndtm.passwordmanager to javafx.fxml;
     exports com.ndtm.passwordmanager;
