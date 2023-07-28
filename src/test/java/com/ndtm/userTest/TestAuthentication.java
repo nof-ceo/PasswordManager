@@ -3,13 +3,20 @@ package com.ndtm.userTest;
 import com.ndtm.passwordmanager.userActions.User;
 import com.ndtm.passwordmanager.repository.DataInteraction;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** TODO:
  * 1.логин и пароль буду в хешированном виде
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TestAuthentication {
+
+    @Mock
     DataInteraction dataInteraction;
 
     @Test
