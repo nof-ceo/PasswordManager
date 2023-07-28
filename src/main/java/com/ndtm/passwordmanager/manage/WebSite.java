@@ -26,9 +26,10 @@ public class WebSite {
     @Column(nullable = false)
     private byte[] password;
 
-    public WebSite(String title, String url, byte[] password) {
+    public WebSite(String title, String url, byte[] login, byte[] password) {
         this.title = title;
         this.url = url;
+        this.login = login;
         this.password = password;
     }
 }
