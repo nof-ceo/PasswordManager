@@ -1,39 +1,39 @@
 package com.ndtm.passwordmanager.userActions;
 
-//import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-// сделать Entity, Table, все дела
-//@Entity
-//@Table(name = "users")
+@Entity
+@Table(name = "users")
 public class User {
 
-   // @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //@Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    //@Column(nullable = false)
+    @Column(name = "last_name", nullable = false )
     private String lastName;
 
-    //@Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private byte[] login;
 
-   // @Column(nullable = false)
+    @Column(nullable = false)
     private byte[] password;
 
-    //@Column(nullable = false)
-    private LocalDateTime registerDate;
+    @Column(nullable = false)
+    private byte[] email;
 
-    public User(String firstName, String lastName, byte[] login, byte[] password) {
+
+    public User(String firstName, String lastName, byte[] login, byte[] password, byte[] email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.password = password;
-        registerDate = LocalDateTime.now();
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -68,11 +68,11 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getRegisterDate() {
-        return registerDate;
+    public byte[] getEmail() {
+        return email;
     }
 
-    public void setRegisterDate(LocalDateTime registerDate) {
-        this.registerDate = registerDate;
+    public void setEmail(byte[] email) {
+        this.email = email;
     }
 }
