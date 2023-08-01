@@ -24,7 +24,7 @@ public class TestAuthentication {
         byte[] login = "loginTest".getBytes();
         byte[] password = "testPassword".getBytes();
 
-        User user = new User("John", "Doe", login, password);
+        User user = new User("John", "Doe", login, password, "testEmail@gmail.com".getBytes());
 
         User foundedUser = dataInteraction.findByLogin(user.getLogin()).get();
         assertEquals(foundedUser.getLogin(), user.getLogin());

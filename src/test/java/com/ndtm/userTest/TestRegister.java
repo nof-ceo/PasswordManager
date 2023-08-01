@@ -26,7 +26,7 @@ public class TestRegister {
         byte[] login = "loginTest".getBytes();
         byte[] password = "testPassword".getBytes();
 
-        User user = new User("John", "Doe", login, password);
+        User user = new User("John", "Doe", login, password, "testEmail@gmail.com".getBytes());
 
         when(dataInteraction.save(any(User.class))).thenReturn(user);
         when(dataInteraction.findByLogin(login)).thenReturn(Optional.of(user));
