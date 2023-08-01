@@ -10,9 +10,8 @@ import jakarta.persistence.*;
 @Table(name = "passwords")
 public class WebSite {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column()
+    private long user_id;
 
     @Column(nullable = false)
     private String title;
