@@ -1,12 +1,14 @@
 package com.ndtm.passwordManageTest;
 
 import com.ndtm.passwordmanager.manage.SavedData;
-import com.ndtm.passwordmanager.repository.DataInteraction;
+import com.ndtm.passwordmanager.savedDataRepository.SavedDataInteraction;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
-import static org.hamcrest.Matchers.any;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import org.junit.runner.RunWith;
 
@@ -17,18 +19,22 @@ import org.junit.runner.RunWith;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestManagePassword {
+
     @Mock
-    DataInteraction dataInteraction;
+    SavedDataInteraction savedDataInteraction;
 
     @Test
     public void savePassword() {
         byte[] login = "testLogin".getBytes();
         byte[] password = "testPassword".getBytes();
 
-        SavedData webSite = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
+        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
 
-        when(dataInteraction.save(any(SavedData.class))).thenReturn(webSite);
-        when(dataInteraction.findByTitle("vk.com")).thenReturn(Optional.of(webSite));
+        when(savedDataInteraction.save(any(SavedData.class))).thenReturn(savedData);
+        assertEquals(savedData, savedDataInteraction.save(savedData));
+
+        when(savedDataInteraction.findBySiteTitle("vk.com")).thenReturn(Optional.of(savedData));
+        assertEquals(Optional.of(savedData), savedDataInteraction.findBySiteTitle("vk.com"));
     }
 
     @Test
@@ -36,10 +42,13 @@ public class TestManagePassword {
         byte[] login = "testLogin".getBytes();
         byte[] password = "testPassword".getBytes();
 
-        SavedData webSite = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
+        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
 
-        when(dataInteraction.deleteByTitle("vk.com")).thenReturn(Optional.of(webSite));
-        when(dataInteraction.findByTitle("vk.com")).thenReturn(Optional.empty());
+        when(savedDataInteraction.deleteBySiteTitle("vk.com")).thenReturn(Optional.of(savedData));
+        assertEquals(Optional.of(savedData), savedDataInteraction.deleteBySiteTitle("vk.com"));
+
+        when(savedDataInteraction.findBySiteTitle("vk.com")).thenReturn(Optional.empty());
+        assertTrue(savedDataInteraction.findBySiteTitle("vk.com").equals(Optional.empty()));
     }
 
 }

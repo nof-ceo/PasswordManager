@@ -1,14 +1,17 @@
 package com.ndtm.userTest;
 
 import com.ndtm.passwordmanager.userActions.User;
-import com.ndtm.passwordmanager.repository.DataInteraction;
-import org.junit.jupiter.api.Test;
+import com.ndtm.passwordmanager.userRepository.UserInteraction;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
+
 
 /** TODO:
  * 1.логин и пароль буду в хешированном виде
@@ -17,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class TestAuthentication {
 
     @Mock
-    DataInteraction dataInteraction;
+    UserInteraction userInteraction;
 
     @Test
     public void authentication() {
@@ -26,10 +29,7 @@ public class TestAuthentication {
 
         User user = new User("John", "Doe", login, password, "testEmail@gmail.com".getBytes());
 
-        User foundedUser = dataInteraction.findByLogin(user.getLogin()).get();
-        assertEquals(foundedUser.getLogin(), user.getLogin());
-
-        User wrongFoundedUser = dataInteraction.findByLogin("sdfds".getBytes()).get();
-        assertNull(wrongFoundedUser.getLogin());
+        when(userInteraction.findByLogin(login)).thenReturn(Optional.of(user));
+        assertEquals(Optional.of(user), userInteraction.findByLogin(login));
     }
 }

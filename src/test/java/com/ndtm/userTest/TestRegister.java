@@ -1,15 +1,14 @@
 package com.ndtm.userTest;
 
 import com.ndtm.passwordmanager.userActions.User;
-import com.ndtm.passwordmanager.repository.DataInteraction;
-import org.junit.jupiter.api.Test;
+import com.ndtm.passwordmanager.userRepository.UserInteraction;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /** TODO:
@@ -17,9 +16,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TestRegister {
-
     @Mock
-    DataInteraction dataInteraction;
+    UserInteraction userInteraction;
 
     @Test
     public void register() {
@@ -28,7 +26,10 @@ public class TestRegister {
 
         User user = new User("John", "Doe", login, password, "testEmail@gmail.com".getBytes());
 
-        when(dataInteraction.save(any(User.class))).thenReturn(user);
-        when(dataInteraction.findByLogin(login)).thenReturn(Optional.of(user));
+        when(userInteraction.save(any(User.class))).thenReturn(user);
+        assertEquals(user.getEmail(), userInteraction.save(user).getEmail());
+
+        when(userInteraction.findById(0)).thenReturn(java.util.Optional.of(user));
+        assertEquals(0, userInteraction.findById(0).get().getId());
     }
 }
