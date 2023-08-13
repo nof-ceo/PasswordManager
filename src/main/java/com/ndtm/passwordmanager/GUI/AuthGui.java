@@ -2,25 +2,22 @@ package com.ndtm.passwordmanager.GUI;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /** TODO:
  *  1. Сделать ForkJoinPool для tuneX
  *  2. Привязать Action к кнопке
  *  3. Email sender
+ *  4. Мб есть вариант исправить исчезновение register menu при повторном нажатии на register без переменной currentMenuIsLogin
  */
 public class AuthGui extends StageManager {
     static Group group;
     private static final List listLoginElements = new ArrayList();
     private static final List listRegisterElements = new ArrayList();
-
+    private static boolean currentMenuIsLogin = true;
     public static void setPointOfWindow(double x, double y) {
         AuthGui.currentStage.setX(x);
         AuthGui.currentStage.setY(y);
@@ -134,7 +131,7 @@ public class AuthGui extends StageManager {
         Button registerButton = new Button("Register");
         registerButton.minHeight(46);
         registerButton.minWidth(116);
-        registerButton.setLayoutX(145);
+        registerButton.setLayoutX(150);
         registerButton.setLayoutY(450);
         registerButton.setStyle("-fx-background-radius: 30 30 30 30;" +
                                 "-fx-border-radius: 30 30 30 30;" +
@@ -153,18 +150,28 @@ public class AuthGui extends StageManager {
 
 
     public static void hideLoginMenu() {
-        group.getChildren().remove(1, 4);
+        if(currentMenuIsLogin) {
+            group.getChildren().remove(1, 4);
+        }
     }
 
     public static void showLoginMenu() {
-        group.getChildren().addAll(listLoginElements);
+        if(!currentMenuIsLogin) {
+            group.getChildren().addAll(listLoginElements);
+            currentMenuIsLogin = true;
+        }
     }
 
     public static void hideRegisterMenu() {
-        group.getChildren().remove(1, 7);
+        if (!currentMenuIsLogin) {
+            group.getChildren().remove(1, 7);
+        }
     }
 
     public static void showRegisterMenu() {
-        group.getChildren().addAll(listRegisterElements);
+        if(currentMenuIsLogin) {
+            group.getChildren().addAll(listRegisterElements);
+            currentMenuIsLogin = false;
+        }
     }
 }
