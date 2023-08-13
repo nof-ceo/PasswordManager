@@ -3,21 +3,31 @@ package com.ndtm.passwordmanager;
 import com.ndtm.passwordmanager.GUI.StageManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
 
-@SpringBootApplication
+
 public class PasswordManagerApplication extends Application {
 
-//	public static void main(String[] args) {
-//		SpringApplication.run(PasswordManagerApplication.class, args);
-//	}
+    private ConfigurableApplicationContext applicationContext;
 
     @Override
+    public void init() throws Exception {
+        applicationContext = new SpringApplicationBuilder(StockUiApp.class).run();
+    }
+
+	@Override
     public void start(Stage stage) throws IOException {
-        StageManager.currentStage = stage;
-        StageManager.openAuthGui();
+        applicationContext.publishEvent(new StageReadyEvent(stage));
+
+    }
+
+    private class StageReadyEvent {
+        public StageReadyEvent(Stage stage) throws IOException {
+            StageManager.currentStage = stage;
+            StageManager.openAuthGui();
+        }
     }
 }
