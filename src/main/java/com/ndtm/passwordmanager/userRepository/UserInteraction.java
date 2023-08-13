@@ -1,11 +1,13 @@
-package com.ndtm.passwordmanager.repository;
+package com.ndtm.passwordmanager.userRepository;
 
-import com.ndtm.passwordmanager.Data;
 import com.ndtm.passwordmanager.userActions.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface DataInteraction extends CrudRepository<Object, Integer>{
+import java.util.Optional;
 
+@Repository
+public interface UserInteraction extends CrudRepository<User, Integer>{
+
+    Optional<User> findByLogin(byte[] login);
 }
