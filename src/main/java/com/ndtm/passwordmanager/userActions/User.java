@@ -1,16 +1,14 @@
 package com.ndtm.passwordmanager.userActions;
 
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -34,6 +32,14 @@ public class User {
         this.login = login;
         this.password = password;
         this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {

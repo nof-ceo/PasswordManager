@@ -1,7 +1,10 @@
 package com.ndtm.passwordmanager.userActions;
 
-import com.ndtm.passwordmanager.repository.DataInteraction;
+import com.ndtm.passwordmanager.userRepository.UserInteraction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserAuthentication{
-    DataInteraction dataInteraction;
+
+    @Autowired
+    UserInteraction userInteraction;
 }
