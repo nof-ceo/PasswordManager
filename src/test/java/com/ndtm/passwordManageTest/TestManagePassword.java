@@ -1,54 +1,64 @@
 package com.ndtm.passwordManageTest;
 
+import com.ndtm.passwordmanager.PasswordManagerApplication;
 import com.ndtm.passwordmanager.manage.SavedData;
-import com.ndtm.passwordmanager.savedDataRepository.SavedDataInteraction;
+import com.ndtm.passwordmanager.repository.SavedDataInteraction;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /** TODO:
  * 1. изменить ссылки и title сайтов на их хеш
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@ComponentScan(basePackages = { "com.ndtm.passwordmanager.*" })
+@EntityScan("com.ndtm.passwordmanager.*")
+@ContextConfiguration(classes = {PasswordManagerApplication.class})
+@SpringBootTest
+@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.userRepository")
+@EnableAutoConfiguration
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TestManagePassword {
 
-    @Mock
+    @Autowired
     SavedDataInteraction savedDataInteraction;
 
+    String login = "testLogin";
+    byte[] password = "testPassword".getBytes();
+
     @Test
-    public void savePassword() {
-        byte[] login = "testLogin".getBytes();
-        byte[] password = "testPassword".getBytes();
+    public void testSavePassword() {
 
         SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
 
-        when(savedDataInteraction.save(any(SavedData.class))).thenReturn(savedData);
-        assertEquals(savedData, savedDataInteraction.save(savedData));
+        SavedData savedDataToDatabase = savedDataInteraction.save(savedData);
+        assertEquals(savedData, savedDataToDatabase);
 
-        when(savedDataInteraction.findBySiteTitle("vk.com")).thenReturn(Optional.of(savedData));
-        assertEquals(Optional.of(savedData), savedDataInteraction.findBySiteTitle("vk.com"));
+        savedDataInteraction.delete(savedData);
     }
 
     @Test
-    public void deletePassword() {
-        byte[] login = "testLogin".getBytes();
-        byte[] password = "testPassword".getBytes();
-
+    public void testFoundData() {
         SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
 
-        when(savedDataInteraction.deleteBySiteTitle("vk.com")).thenReturn(Optional.of(savedData));
-        assertEquals(Optional.of(savedData), savedDataInteraction.deleteBySiteTitle("vk.com"));
+        savedDataInteraction.save(savedData);
 
-        when(savedDataInteraction.findBySiteTitle("vk.com")).thenReturn(Optional.empty());
-        assertTrue(savedDataInteraction.findBySiteTitle("vk.com").equals(Optional.empty()));
+        assertEquals(savedData.getLogin(), savedDataInteraction.findByLogin(login).get().getLogin());
+        savedDataInteraction.delete(savedData);
     }
+
+
 
 }
