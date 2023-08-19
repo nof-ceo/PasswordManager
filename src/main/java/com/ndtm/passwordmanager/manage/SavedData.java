@@ -12,11 +12,11 @@ import javax.persistence.*;
 public class SavedData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
     private int id;
 
-    @Column(name = "user_id")
-    private long userId;
+    @Column(name = "user_id", nullable = false)
+    private int userId;
 
     @Column(name = "site_title", nullable = false)
     private String siteTitle;
@@ -25,7 +25,7 @@ public class SavedData {
     private String siteUrl;
 
     @Column(nullable = false)
-    private byte[] login;
+    private String login;
 
     @Column(nullable = false)
     private byte[] password;
@@ -42,7 +42,7 @@ public class SavedData {
     @Column(name = "phone_number", nullable = true)
     private byte[] phoneNumber;
 
-    public SavedData(String siteTitle, String siteUrl, byte[] login, byte[] password, byte[] creditCard, byte[] expiredDate, byte[] cvv, byte[] phoneNumber) {
+    public SavedData(String siteTitle, String siteUrl, String login, byte[] password, byte[] creditCard, byte[] expiredDate, byte[] cvv, byte[] phoneNumber) {
         this.siteTitle = siteTitle;
         this.siteUrl = siteUrl;
         this.login = login;
@@ -51,6 +51,10 @@ public class SavedData {
         this.expiredDate = expiredDate;
         this.cvv = cvv;
         this.phoneNumber = phoneNumber;
+    }
+
+    public SavedData() {
+
     }
 
     public int getId() {
@@ -65,7 +69,7 @@ public class SavedData {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -85,11 +89,11 @@ public class SavedData {
         this.siteUrl = siteUrl;
     }
 
-    public byte[] getLogin() {
+    public String getLogin() {
         return login;
     }
 
-    public void setLogin(byte[] login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 

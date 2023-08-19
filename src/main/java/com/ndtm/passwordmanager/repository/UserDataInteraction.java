@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface DataInteraction extends CrudRepository<User, Integer> {
+public interface UserDataInteraction extends CrudRepository<User, Integer> {
 
     Optional<User> findByLogin(String login);
 }

@@ -1,5 +1,8 @@
 package com.ndtm.passwordmanager.userActions;
 
+
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,7 +20,7 @@ public class User {
     private String lastName;
 
     @Column(nullable = false, unique = true)
-    private byte[] login;
+    private String login;
 
     @Column(nullable = false)
     private byte[] password;
@@ -26,7 +29,7 @@ public class User {
     private byte[] email;
 
 
-    public User(String firstName, String lastName, byte[] login, byte[] password, byte[] email) {
+    public User(String firstName, String lastName, String login, byte[] password, byte[] email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
@@ -34,7 +37,11 @@ public class User {
         this.email = email;
     }
 
-    public long getId() {
+    public User() {
+
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -58,11 +65,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public byte[] getLogin() {
+    public String getLogin() {
         return login;
     }
 
-    public void setLogin(byte[] login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
