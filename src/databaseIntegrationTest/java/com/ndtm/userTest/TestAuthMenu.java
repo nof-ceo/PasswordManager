@@ -2,7 +2,7 @@ package com.ndtm.userTest;
 
 import com.ndtm.passwordmanager.PasswordManagerApplication;
 import com.ndtm.passwordmanager.userActions.User;
-import com.ndtm.passwordmanager.repository.DataInteraction;
+import com.ndtm.passwordmanager.repository.UserDataInteraction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @EntityScan("com.ndtm.passwordmanager.*")
 @ContextConfiguration(classes = {PasswordManagerApplication.class})
 @SpringBootTest
-@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.userRepository")
+@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.repository")
 @EnableAutoConfiguration
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TestAuthMenu {
     @Autowired
-    DataInteraction userInteraction;
+    UserDataInteraction userInteraction;
 
     @Test
     public void testRegister() {

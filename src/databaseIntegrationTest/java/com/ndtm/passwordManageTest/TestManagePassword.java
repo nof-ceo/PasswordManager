@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @EntityScan("com.ndtm.passwordmanager.*")
 @ContextConfiguration(classes = {PasswordManagerApplication.class})
 @SpringBootTest
-@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.userRepository")
+@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.repository")
 @EnableAutoConfiguration
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TestManagePassword {
