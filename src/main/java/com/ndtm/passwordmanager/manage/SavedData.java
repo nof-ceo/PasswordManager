@@ -3,12 +3,10 @@ package com.ndtm.passwordmanager.manage;
 import javax.persistence.*;
 
 /** TODO:
- * 1. измнеить название класса, сейчас оно не отражает намерения класса
- * 2. мб пассворд будет стрингом. Когда напишу метод хеширования - возможно изменю
- * 3. creditCard, cvv, expiredDate, phoneNumber - будут в хешированном виде
+ * 1. creditCard, cvv, expiredDate, phoneNumber - будут в хешированном виде
  */
 @Entity
-@Table(schema = "savedData")
+@Table(name = "savedData")
 public class SavedData {
 
     @Id
@@ -24,11 +22,11 @@ public class SavedData {
     @Column(name = "site_url", nullable = false)
     private String siteUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String login;
 
-    @Column(nullable = false)
-    private byte[] password;
+    @Column(nullable = true)
+    private String password;
 
     @Column(name = "credit_card", nullable = true)
     private byte[] creditCard;
@@ -42,7 +40,7 @@ public class SavedData {
     @Column(name = "phone_number", nullable = true)
     private byte[] phoneNumber;
 
-    public SavedData(String siteTitle, String siteUrl, String login, byte[] password, byte[] creditCard, byte[] expiredDate, byte[] cvv, byte[] phoneNumber) {
+    public SavedData(String siteTitle, String siteUrl, String login, String password, byte[] creditCard, byte[] expiredDate, byte[] cvv, byte[] phoneNumber) {
         this.siteTitle = siteTitle;
         this.siteUrl = siteUrl;
         this.login = login;
@@ -97,11 +95,11 @@ public class SavedData {
         this.login = login;
     }
 
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(byte[] password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -136,4 +134,25 @@ public class SavedData {
     public void setPhoneNumber(byte[] phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public boolean equals(Object savedData) {
+        if(savedData.getClass() != this.getClass())
+            return false;
+        else {
+            SavedData data = (SavedData) savedData;
+
+            return ((this.userId == data.userId) && (this.siteTitle.equals(data.siteTitle)) &&
+                    (this.siteUrl.equals(data.siteUrl)) && (this.login.equals(data.login)) &&
+                    (this.password.equals(data.password)) && (this.creditCard == data.creditCard) &&
+                    (this.expiredDate == data.expiredDate) && (this.cvv == data.cvv) &&
+                    (this.phoneNumber == data.phoneNumber));
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return siteTitle.hashCode() + siteUrl.hashCode() + userId;
+    }
+
 }
