@@ -1,15 +1,18 @@
 package com.ndtm.passwordManageTest;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.PasswordManagerApplication;
 import com.ndtm.passwordmanager.manage.SavedData;
+import com.ndtm.passwordmanager.manage.SavedDataService;
 import com.ndtm.passwordmanager.repository.SavedDataInteraction;
+import com.ndtm.passwordmanager.userActions.User;
+import com.ndtm.passwordmanager.userActions.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,37 +29,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ComponentScan(basePackages = { "com.ndtm.passwordmanager.*" })
 @EntityScan("com.ndtm.passwordmanager.*")
 @ContextConfiguration(classes = {PasswordManagerApplication.class})
-@SpringBootTest
+@DataJpaTest
 @EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.repository")
-@EnableAutoConfiguration
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TestManagePassword {
 
     @Autowired
-    SavedDataInteraction savedDataInteraction;
+    SavedDataService savedDataService;
+
+    @Autowired
+    UserService userService;
 
     String login = "testLogin";
-    byte[] password = "testPassword".getBytes();
+    char[] password = "testPassword".toCharArray();
+
+    User user = new User("Dree", "Doe", "testLoginUser", BCrypt.withDefaults().hashToString(12, "testPasswordUser".toCharArray()), "testEmail@gmail.com".getBytes());
 
     @Test
     public void testSavePassword() {
 
-        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
+        String passwordHash = BCrypt.withDefaults().hashToString(12, password);
 
-        SavedData savedDataToDatabase = savedDataInteraction.save(savedData);
-        assertEquals(savedData, savedDataToDatabase);
+        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, passwordHash, null, null, null, null);
+        userService.makeRegister(user);
+        userService.makeAuth("testLoginUser", "testPasswordUser".toCharArray());
 
-        savedDataInteraction.delete(savedData);
+        assertEquals(savedData, savedDataService.saveData(savedData));
     }
 
     @Test
     public void testFoundData() {
-        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, password, null, null, null, null);
 
-        savedDataInteraction.save(savedData);
+        String passwordHash = BCrypt.withDefaults().hashToString(12, password);
 
-        assertEquals(savedData.getLogin(), savedDataInteraction.findByLogin(login).get().getLogin());
-        savedDataInteraction.delete(savedData);
+        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, passwordHash, null, null, null, null);
+
+        userService.makeRegister(user);
+        userService.makeAuth("testLoginUser", "testPasswordUser".toCharArray());
+        savedDataService.saveData(savedData);
+
+        assertEquals(savedData, savedDataService.findByLogin(login).get());
     }
 
 
