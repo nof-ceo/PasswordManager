@@ -4,7 +4,6 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.PasswordManagerApplication;
 import com.ndtm.passwordmanager.manage.SavedData;
 import com.ndtm.passwordmanager.manage.SavedDataService;
-import com.ndtm.passwordmanager.repository.SavedDataInteraction;
 import com.ndtm.passwordmanager.userActions.User;
 import com.ndtm.passwordmanager.userActions.UserService;
 import org.junit.Test;
@@ -41,16 +40,13 @@ public class TestManagePassword {
     UserService userService;
 
     String login = "testLogin";
-    char[] password = "testPassword".toCharArray();
 
-    User user = new User("Dree", "Doe", "testLoginUser", BCrypt.withDefaults().hashToString(12, "testPasswordUser".toCharArray()), "testEmail@gmail.com".getBytes());
+    User user = new User("Dree", "Doe", "testLoginUser", BCrypt.withDefaults().hashToString(12, "testPasswordUser".toCharArray()), "testEmail@gmail.com");
+
+    SavedData savedData = new SavedData("vk.com", "https://vk.com", login, BCrypt.withDefaults().hashToString(12, "testPassword".toCharArray()), null, null, null, null);
 
     @Test
     public void testSavePassword() {
-
-        String passwordHash = BCrypt.withDefaults().hashToString(12, password);
-
-        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, passwordHash, null, null, null, null);
         userService.makeRegister(user);
         userService.makeAuth("testLoginUser", "testPasswordUser".toCharArray());
 
@@ -59,11 +55,6 @@ public class TestManagePassword {
 
     @Test
     public void testFoundData() {
-
-        String passwordHash = BCrypt.withDefaults().hashToString(12, password);
-
-        SavedData savedData = new SavedData("vk.com", "https://vk.com", login, passwordHash, null, null, null, null);
-
         userService.makeRegister(user);
         userService.makeAuth("testLoginUser", "testPasswordUser".toCharArray());
         savedDataService.saveData(savedData);
