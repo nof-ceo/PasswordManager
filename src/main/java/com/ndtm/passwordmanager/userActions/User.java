@@ -16,8 +16,8 @@ public class User {
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false )
-    private String lastName;
+    @Column(name = "surname", nullable = false )
+    private String surName;
 
     @Column(nullable = false, unique = true)
     private String login;
@@ -26,12 +26,12 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private byte[] email;
+    private String email;
 
 
-    public User(String firstName, String lastName, String login, String password, byte[] email) {
+    public User(String firstName, String surName, String login, String password, String email) {
         this.firstName = firstName;
-        this.lastName = lastName;
+        this.surName = surName;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -57,12 +57,12 @@ public class User {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getSurName() {
+        return surName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setSurName(String surName) {
+        this.surName = surName;
     }
 
     public String getLogin() {
@@ -81,11 +81,11 @@ public class User {
         this.password = password;
     }
 
-    public byte[] getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(byte[] email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 }
