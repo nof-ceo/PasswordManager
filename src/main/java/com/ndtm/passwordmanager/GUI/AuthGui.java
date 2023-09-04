@@ -1,30 +1,56 @@
 package com.ndtm.passwordmanager.GUI;
 
+import com.ndtm.passwordmanager.userActions.UserService;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+
+
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 /** TODO:
  *  1. Сделать ForkJoinPool для tuneX
- *  2. Привязать Action к кнопке
- *  3. Email sender
- *  4. Мб есть вариант исправить исчезновение register menu при повторном нажатии на register без переменной currentMenuIsLogin
+ *  2. Email sender
+ *  3. Мб есть вариант исправить исчезновение register menu при повторном нажатии на register без переменной currentMenuIsLogin
+ *  4. Многопоточность
+ *  5. Индексация бд для оптимизации запросов
+ *  6. Реализовать MVC paradigm
  */
-public class AuthGui extends StageManager {
-    static Group group;
+
+/** Problems:
+ * 1. После нажатия register перекидывате в login, меню выбора сверху не ставит login
+ */
+
+public class AuthGui {
+
+    private static final UserService userService = new UserService();
+
+    private static Group group;
+
     private static final List listLoginElements = new ArrayList();
     private static final List listRegisterElements = new ArrayList();
+
+    public static final ImageView loginRequirements = new ImageView();
+    private static final ImageView emailRequirements = new ImageView();
+    private static final ImageView passwordRequirements = new ImageView();
+
     private static boolean currentMenuIsLogin = true;
+
     public static void setPointOfWindow(double x, double y) {
-        AuthGui.currentStage.setX(x);
-        AuthGui.currentStage.setY(y);
+        StageManager.currentStage.setX(x);
+        StageManager.currentStage.setY(y);
     }
 
     public static void closeAuthWindow() {
-        AuthGui.currentStage.hide();
+        StageManager.currentStage.hide();
     }
 
     public static void setAuthGui(Group groupFromStageManager) {
@@ -65,7 +91,7 @@ public class AuthGui extends StageManager {
         EventHandler<MouseEvent> mouseReleased = event -> {
             try {
                 AuthGui.closeAuthWindow();
-                openPasswordManagerGui();
+                StageManager.openPasswordManagerGui();
             } catch (IOException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERROR");
@@ -74,7 +100,7 @@ public class AuthGui extends StageManager {
                 alert.showAndWait();
 
                 ex.printStackTrace();
-                currentStage.show();
+                StageManager.currentStage.show();
             }
         };
         loginButton.setOnMouseReleased(mouseReleased);
@@ -87,6 +113,7 @@ public class AuthGui extends StageManager {
         listLoginElements.add(passwordField);
         listLoginElements.add(loginButton);
     }
+
     private static void tuneRegisterMenu() {
         TextField firstNameField = new TextField();
         firstNameField.setPrefWidth(100);
@@ -96,13 +123,13 @@ public class AuthGui extends StageManager {
                                 "-fx-background-radius: 20 20 20 20;");
         firstNameField.setPromptText("First name");
 
-        TextField lastNameField = new TextField();
-        lastNameField.setPrefWidth(100);
-        lastNameField.setLayoutX(212);
-        lastNameField.setLayoutY(176);
-        lastNameField.setStyle("-fx-background-color: #c3c3c3;" +
+        TextField surNameField = new TextField();
+        surNameField.setPrefWidth(100);
+        surNameField.setLayoutX(212);
+        surNameField.setLayoutY(176);
+        surNameField.setStyle("-fx-background-color: #c3c3c3;" +
                                "-fx-background-radius: 20 20 20 20;");
-        lastNameField.setPromptText("Last name");
+        surNameField.setPromptText("Surname");
 
         TextField emailField = new TextField();
         emailField.setMinWidth(226);
@@ -111,6 +138,14 @@ public class AuthGui extends StageManager {
         emailField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         emailField.setPromptText("Email");
+        setRequirementsPos(emailRequirements, 233);
+        EventHandler<KeyEvent> keyTypedEmailField = event -> {
+            if(userService.checkEmailFieldForCorrectAndNotNull(emailField.getText()))
+                showCorrectIcon(emailRequirements);
+            else
+                showWrongIcon(emailRequirements ,emailField.getText().isBlank());
+        };
+        emailField.setOnKeyTyped(keyTypedEmailField);
 
         TextField loginField = new TextField();
         loginField.setMinWidth(226);
@@ -119,6 +154,14 @@ public class AuthGui extends StageManager {
         loginField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         loginField.setPromptText("Login");
+        setRequirementsPos(loginRequirements, 288);
+        EventHandler<KeyEvent> keyTypedLoginField = event -> {
+            if(userService.checkLoginFieldForCorrectAndNotNull(loginField.getText()))
+                showCorrectIcon(loginRequirements);
+            else
+                showWrongIcon(loginRequirements, loginField.getText().isBlank());
+        };
+        loginField.setOnKeyTyped(keyTypedLoginField);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setMinWidth(226);
@@ -127,6 +170,15 @@ public class AuthGui extends StageManager {
         passwordField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         passwordField.setPromptText("Password");
+        setRequirementsPos(passwordRequirements, 343);
+        EventHandler<KeyEvent> keyTypedPasswordField = event -> {
+            if(userService.checkPasswordFieldForCorrectAndNotNull(passwordField.getText()))
+                showCorrectIcon(passwordRequirements);
+            else
+                showWrongIcon(passwordRequirements, passwordField.getText().isBlank());
+        };
+        passwordField.setOnKeyTyped(keyTypedPasswordField);
+
 
         Button registerButton = new Button("Register");
         registerButton.minHeight(46);
@@ -139,15 +191,93 @@ public class AuthGui extends StageManager {
                                 "-fx-border-color: #c1b3ff;" +
                                 "-fx-font-size: 21;" +
                                 "-fx-text-fill: #c1b3ff;");
+        EventHandler<MouseEvent> registerButtonClicked = event -> {
+            if(userService.checkPasswordFieldForCorrectAndNotNull(passwordField.getText()) &&
+                    userService.checkEmailFieldForCorrectAndNotNull(emailField.getText()) &&
+                        userService.checkLoginFieldForCorrectAndNotNull(loginField.getText()) && !firstNameField.getText().isBlank() &&
+                            !surNameField.getText().isBlank()) {
+                // это будет выполнять новый поток
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        userService.makeRegister(firstNameField.getText(), surNameField.getText(),
+                                loginField.getText(), passwordField.getText().toCharArray(), emailField.getText());
+                    }
+                };
+
+                Thread thread = new Thread(runnable);
+                thread.start();
+
+                // это основной
+                clearRequirementIcons();
+                firstNameField.clear();
+                surNameField.clear();
+                emailField.clear();
+                loginField.clear();
+                passwordField.clear();
+
+                hideRegisterMenu();
+                showLoginMenu();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Register Error");
+                alert.setContentText("Register Error: Fields must be non-null and meet requirements");
+
+                alert.showAndWait();
+            }
+        };
+        registerButton.setOnMouseClicked(registerButtonClicked);
 
         listRegisterElements.add(firstNameField);
-        listRegisterElements.add(lastNameField);
+        listRegisterElements.add(surNameField);
         listRegisterElements.add(emailField);
         listRegisterElements.add(loginField);
         listRegisterElements.add(passwordField);
         listRegisterElements.add(registerButton);
+        listRegisterElements.add(emailRequirements);
+        listRegisterElements.add(loginRequirements);
+        listRegisterElements.add(passwordRequirements);
+
     }
 
+    public static void showCorrectIcon(ImageView requirements) {
+        if(requirements.getImage() == null || !requirements.getImage().getUrl().equals("src/main/resources/com/ndtm/" +
+                "passwordmanager/icons8-correct-104.png")) {
+            group.getChildren().remove(requirements);
+
+            Image image = new Image("file:src/main/resources/com/ndtm/passwordmanager/icons8-correct-104.png");
+            requirements.setImage(image);
+
+            group.getChildren().add(requirements);
+        }
+    }
+
+    public static void showWrongIcon(ImageView requirements, boolean inputTextIsNull) {
+        if(inputTextIsNull)
+            group.getChildren().remove(requirements);
+        else {
+            group.getChildren().remove(requirements);
+
+            Image image = new Image("file:src/main/resources/com/ndtm/passwordmanager/icons8-wrong-104.png");
+            requirements.setImage(image);
+
+            group.getChildren().add(requirements);
+        }
+    }
+
+    public static void setRequirementsPos(ImageView requirement, int y) {
+        requirement.setX(315);
+        requirement.setY(y);
+        requirement.setFitHeight(20);
+        requirement.setFitWidth(20);
+    }
+
+    public static void clearRequirementIcons() {
+        emailRequirements.imageProperty().set(null);
+        loginRequirements.imageProperty().set(null);
+        passwordRequirements.imageProperty().set(null);
+    }
 
     public static void hideLoginMenu() {
         if(currentMenuIsLogin) {
@@ -164,7 +294,7 @@ public class AuthGui extends StageManager {
 
     public static void hideRegisterMenu() {
         if (!currentMenuIsLogin) {
-            group.getChildren().remove(1, 7);
+            group.getChildren().remove(1, 10);
         }
     }
 
