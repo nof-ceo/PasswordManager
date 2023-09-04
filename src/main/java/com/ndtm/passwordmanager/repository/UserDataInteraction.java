@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserDataInteraction extends CrudRepository<User, Integer> {
 
     Optional<User> findByLogin(String login);
+    Optional<User> findByEmail(String email);
 }
