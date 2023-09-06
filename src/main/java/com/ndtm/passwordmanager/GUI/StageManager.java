@@ -9,24 +9,31 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /** TODO:
- * 1. Проверка на правильность данных в mouseReleased
  */
 public abstract class StageManager extends Stage {
+
+    AuthGui authGui = new AuthGui();
+
     public static Stage currentStage;
 
-    public static void openAuthGui() throws IOException {
+    public static ExecutorService executor = Executors.newFixedThreadPool(5);
+
+    public void openAuthGui() throws IOException {
         Group group = new Group();
         Parent root;
 
         root = FXMLLoader.load(PasswordManagerApplication.class.getResource("authPasswordManager.fxml"));
         group.getChildren().add(root);
-        AuthGui.setAuthGui(group);
+        authGui.setAuthGui(group);
 
         Scene scene = new Scene(group, 400, 600);
         scene.setFill(Color.TRANSPARENT);
         settingStage(scene);
+
     }
 
 
@@ -37,7 +44,7 @@ public abstract class StageManager extends Stage {
         settingStage(scene);
     }
 
-    public static void settingStage(Scene scene) throws IOException{
+    private static void settingStage(Scene scene) throws IOException{
         Stage stage = new Stage();
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
