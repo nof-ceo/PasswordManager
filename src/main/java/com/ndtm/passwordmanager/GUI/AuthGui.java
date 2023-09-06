@@ -1,5 +1,6 @@
 package com.ndtm.passwordmanager.GUI;
 
+import com.ndtm.passwordmanager.controller.AuthMenuController;
 import com.ndtm.passwordmanager.userActions.UserService;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -22,15 +23,9 @@ import java.util.List;
  *  3. Мб есть вариант исправить исчезновение register menu при повторном нажатии на register без переменной currentMenuIsLogin
  *  4. Многопоточность
  *  5. Индексация бд для оптимизации запросов
- *  6. Реализовать MVC paradigm
  */
 
-/** Problems:
- * 1. После нажатия register перекидывате в login, меню выбора сверху не ставит login
- */
-
-public class AuthGui {
-
+public class AuthGui extends AuthMenuController {
     private static final UserService userService = new UserService();
 
     private static Group group;
@@ -39,8 +34,8 @@ public class AuthGui {
     private static final List listRegisterElements = new ArrayList();
 
     public static final ImageView loginRequirements = new ImageView();
-    private static final ImageView emailRequirements = new ImageView();
-    private static final ImageView passwordRequirements = new ImageView();
+    public static final ImageView emailRequirements = new ImageView();
+    public static final ImageView passwordRequirements = new ImageView();
 
     private static boolean currentMenuIsLogin = true;
 
@@ -49,17 +44,17 @@ public class AuthGui {
         StageManager.currentStage.setY(y);
     }
 
-    public static void closeAuthWindow() {
+    public void closeAuthWindow() {
         StageManager.currentStage.hide();
     }
 
-    public static void setAuthGui(Group groupFromStageManager) {
+    public void setAuthGui(Group groupFromStageManager) {
         group = groupFromStageManager;
         tuneLoginMenu();
         tuneRegisterMenu();
     }
 
-    private static void tuneLoginMenu() {
+    private void tuneLoginMenu() {
         TextField loginField = new TextField();
         loginField.setLayoutX(100);
         loginField.setLayoutY(175);
@@ -90,7 +85,7 @@ public class AuthGui {
         loginButton.setText("Login");
         EventHandler<MouseEvent> mouseReleased = event -> {
             try {
-                AuthGui.closeAuthWindow();
+                closeAuthWindow();
                 StageManager.openPasswordManagerGui();
             } catch (IOException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -114,7 +109,7 @@ public class AuthGui {
         listLoginElements.add(loginButton);
     }
 
-    private static void tuneRegisterMenu() {
+    private void tuneRegisterMenu() {
         TextField firstNameField = new TextField();
         firstNameField.setPrefWidth(100);
         firstNameField.setLayoutX(87);
@@ -140,11 +135,9 @@ public class AuthGui {
         emailField.setPromptText("Email");
         setRequirementsPos(emailRequirements, 233);
         EventHandler<KeyEvent> keyTypedEmailField = event -> {
-            if(userService.checkEmailFieldForCorrectAndNotNull(emailField.getText()))
-                showCorrectIcon(emailRequirements);
-            else
-                showWrongIcon(emailRequirements ,emailField.getText().isBlank());
+            typedInEmailField(emailField.getText());
         };
+
         emailField.setOnKeyTyped(keyTypedEmailField);
 
         TextField loginField = new TextField();
@@ -156,10 +149,7 @@ public class AuthGui {
         loginField.setPromptText("Login");
         setRequirementsPos(loginRequirements, 288);
         EventHandler<KeyEvent> keyTypedLoginField = event -> {
-            if(userService.checkLoginFieldForCorrectAndNotNull(loginField.getText()))
-                showCorrectIcon(loginRequirements);
-            else
-                showWrongIcon(loginRequirements, loginField.getText().isBlank());
+            typedInLoginField(loginField.getText());
         };
         loginField.setOnKeyTyped(keyTypedLoginField);
 
@@ -172,10 +162,7 @@ public class AuthGui {
         passwordField.setPromptText("Password");
         setRequirementsPos(passwordRequirements, 343);
         EventHandler<KeyEvent> keyTypedPasswordField = event -> {
-            if(userService.checkPasswordFieldForCorrectAndNotNull(passwordField.getText()))
-                showCorrectIcon(passwordRequirements);
-            else
-                showWrongIcon(passwordRequirements, passwordField.getText().isBlank());
+                typeInPasswordField(passwordField.getText());
         };
         passwordField.setOnKeyTyped(keyTypedPasswordField);
 
@@ -196,28 +183,9 @@ public class AuthGui {
                     userService.checkEmailFieldForCorrectAndNotNull(emailField.getText()) &&
                         userService.checkLoginFieldForCorrectAndNotNull(loginField.getText()) && !firstNameField.getText().isBlank() &&
                             !surNameField.getText().isBlank()) {
-                // это будет выполнять новый поток
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        userService.makeRegister(firstNameField.getText(), surNameField.getText(),
-                                loginField.getText(), passwordField.getText().toCharArray(), emailField.getText());
-                    }
-                };
 
-                Thread thread = new Thread(runnable);
-                thread.start();
+                registerButtonClicked(firstNameField, surNameField, loginField, passwordField, emailField);
 
-                // это основной
-                clearRequirementIcons();
-                firstNameField.clear();
-                surNameField.clear();
-                emailField.clear();
-                loginField.clear();
-                passwordField.clear();
-
-                hideRegisterMenu();
-                showLoginMenu();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -266,7 +234,7 @@ public class AuthGui {
         }
     }
 
-    public static void setRequirementsPos(ImageView requirement, int y) {
+    public void setRequirementsPos(ImageView requirement, int y) {
         requirement.setX(315);
         requirement.setY(y);
         requirement.setFitHeight(20);
