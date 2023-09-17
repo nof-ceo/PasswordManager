@@ -22,13 +22,13 @@ public class SavedDataService {
         String passwordHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 
         SavedData savedData = new SavedData(siteTitle, siteUrl, login, passwordHash, creditCard, expiredDate, cvv, phoneNumber);
-        savedData.setUserId(UserService.currentUser.getId());
+        savedData.setUserId(UserService.currentActiveUser.getId());
 
         return savedDataInteraction.save(savedData);
     }
 
     public SavedData saveData(SavedData savedData) {
-        savedData.setUserId(UserService.currentUser.getId());
+        savedData.setUserId(UserService.currentActiveUser.getId());
 
         return savedDataInteraction.save(savedData);
     }
