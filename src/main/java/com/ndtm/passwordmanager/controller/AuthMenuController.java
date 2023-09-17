@@ -1,6 +1,8 @@
 package com.ndtm.passwordmanager.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.GUI.*;
+import com.ndtm.passwordmanager.userActions.User;
 import com.ndtm.passwordmanager.userActions.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,7 +16,8 @@ import static com.ndtm.passwordmanager.GUI.AuthGui.*;
 
 
 public class AuthMenuController {
-    private static final UserService userService = new UserService();
+
+    private UserService userService = new UserService();
 
     @FXML
     public Label buttonForChooseLogin;
@@ -98,12 +101,17 @@ public class AuthMenuController {
             showWrongIcon(passwordRequirements, password.isBlank());
     }
 
-    public void registerButtonClicked(TextField firstNameField, TextField surNameField, TextField loginField, PasswordField passwordField, TextField emailField) {
+    public void registerButtonClicked(TextField firstNameField, TextField surNameField,
+                                        TextField loginField, PasswordField passwordField, TextField emailField) {
 
         StageManager.executor.execute(() -> {
+            User user = new User(firstNameField.getText(), surNameField.getText(), loginField.getText(), passwordField.getText(), emailField.getText());
 
-            userService.makeRegister(firstNameField.getText(), surNameField.getText(),
-                    loginField.getText(), passwordField.getText().toCharArray(), emailField.getText());
+            try {
+                userService.sendVerificationLink(user);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
             clearRequirementIcons();
             firstNameField.clear();
@@ -114,7 +122,13 @@ public class AuthMenuController {
 
         });
 
+        continueRegisterNotification(emailField.getText());
+
         loginChosen();
+    }
+
+    public boolean loginButtonClicked(String login, String password) {
+        return userService.makeAuth(login, password.toCharArray());
     }
 
 }
