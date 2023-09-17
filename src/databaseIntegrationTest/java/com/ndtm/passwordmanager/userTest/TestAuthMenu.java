@@ -29,9 +29,8 @@ public class TestAuthMenu {
     UserService userRegister;
 
     String login = "testLogin";
-    String passwordHash = BCrypt.withDefaults().hashToString(12, "testPassword".toCharArray());
 
-    User user = new User("John", "Doe", login, passwordHash, "testEmail@gmail.com");
+    User user = new User("John", "Doe", login, "testPassword", "testEmail@gmail.com");
 
     @Test
     public void testRegister() {

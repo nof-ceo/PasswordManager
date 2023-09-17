@@ -26,7 +26,8 @@ import java.util.List;
  */
 
 public class AuthGui extends AuthMenuController {
-    private static final UserService userService = new UserService();
+
+    private final UserService userService = new UserService();
 
     private static Group group;
 
@@ -71,6 +72,13 @@ public class AuthGui extends AuthMenuController {
                                "-fx-background-color: #c3c3c3;");
         passwordField.setPromptText("Password");
 
+        Label errorLabel = new Label();
+        errorLabel.setLayoutX(130);
+        errorLabel.setLayoutY(340);
+        errorLabel.setText("Incorrect login or password");
+        errorLabel.setOpacity(0.0);
+        errorLabel.setStyle("-fx-text-fill: #ff2d00;");
+
         Button loginButton = new Button();
         loginButton.setMinHeight(46);
         loginButton.setMinWidth(116);
@@ -85,17 +93,14 @@ public class AuthGui extends AuthMenuController {
         loginButton.setText("Login");
         EventHandler<MouseEvent> mouseReleased = event -> {
             try {
-                closeAuthWindow();
-                StageManager.openPasswordManagerGui();
+                if(loginButtonClicked(loginField.getText(), passwordField.getText())) {
+                    closeAuthWindow();
+                    StageManager.openPasswordManagerGui();
+                } else {
+                    errorLabel.setOpacity(100.0);
+                }
             } catch (IOException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Open ERROR");
-                alert.setContentText("Cannot open a passwordManagerMain.fxml");
-                alert.showAndWait();
 
-                ex.printStackTrace();
-                StageManager.currentStage.show();
             }
         };
         loginButton.setOnMouseReleased(mouseReleased);
@@ -103,6 +108,7 @@ public class AuthGui extends AuthMenuController {
         group.getChildren().add(loginField);
         group.getChildren().add(passwordField);
         group.getChildren().add(loginButton);
+        group.getChildren().add(errorLabel);
 
         listLoginElements.add(loginField);
         listLoginElements.add(passwordField);
@@ -187,12 +193,7 @@ public class AuthGui extends AuthMenuController {
                 registerButtonClicked(firstNameField, surNameField, loginField, passwordField, emailField);
 
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Register Error");
-                alert.setContentText("Register Error: Fields must be non-null and meet requirements");
-
-                alert.showAndWait();
+                invalidRegisterAttemptNotification();
             }
         };
         registerButton.setOnMouseClicked(registerButtonClicked);
@@ -239,6 +240,24 @@ public class AuthGui extends AuthMenuController {
         requirement.setY(y);
         requirement.setFitHeight(20);
         requirement.setFitWidth(20);
+    }
+
+    public static void continueRegisterNotification(String email) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Continue");
+        alert.setHeaderText("Continuation of registration");
+        alert.setContentText("A verification message was sent to \"" + email +"\"");
+
+        alert.show();
+    }
+
+    public void invalidRegisterAttemptNotification() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid");
+        alert.setHeaderText("Register Error");
+        alert.setContentText("Error: Fields must be non-null and meet requirements");
+
+        alert.showAndWait();
     }
 
     public static void clearRequirementIcons() {

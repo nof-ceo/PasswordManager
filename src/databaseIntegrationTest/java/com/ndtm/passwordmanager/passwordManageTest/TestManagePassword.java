@@ -36,7 +36,7 @@ public class TestManagePassword {
 
     String login = "testLogin";
 
-    User user = new User("Dree", "Doe", "testLoginUser", BCrypt.withDefaults().hashToString(12, "testPasswordUser".toCharArray()), "testEmail@gmail.com");
+    User user = new User("Dree", "Doe", "testLoginUser", "testPasswordUser", "testEmail@gmail.com");
 
     SavedData savedData = new SavedData("vk.com", "https://vk.com", login, BCrypt.withDefaults().hashToString(12, "testPassword".toCharArray()), null, null, null, null);
 
