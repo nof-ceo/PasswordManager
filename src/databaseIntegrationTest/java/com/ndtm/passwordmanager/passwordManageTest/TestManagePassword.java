@@ -1,4 +1,4 @@
-package com.ndtm.passwordManageTest;
+package com.ndtm.passwordmanager;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.PasswordManagerApplication;

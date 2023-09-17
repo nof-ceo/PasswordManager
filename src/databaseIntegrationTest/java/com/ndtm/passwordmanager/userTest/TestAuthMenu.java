@@ -1,4 +1,4 @@
-package com.ndtm.userTest;
+package com.ndtm.passwordmanager;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.PasswordManagerApplication;
@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @RunWith(SpringRunner.class)
 @EntityScan("com.ndtm.passwordmanager.*")
-@ContextConfiguration(classes = {PasswordManagerApplication.class})
 @DataJpaTest
 @EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.repository")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
