@@ -28,6 +28,8 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    private String verificationToken = "";
+
 
     public User(String firstName, String surName, String login, String password, String email) {
         this.firstName = firstName;
@@ -87,5 +89,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }

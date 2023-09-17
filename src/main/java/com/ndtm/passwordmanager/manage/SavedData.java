@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 /** TODO:
  * 1. creditCard, cvv, expiredDate, phoneNumber - будут в хешированном виде
+ * 2. password должен быть закодирован, а не захеширован
  */
 @Entity
 @Table(name = "savedData")
