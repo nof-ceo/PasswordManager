@@ -1,7 +1,7 @@
-package com.ndtm.passwordManageTest;
+package com.ndtm.passwordmanager.passwordManageTest;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.ndtm.passwordmanager.PasswordManagerApplication;
+import com.ndtm.passwordmanager.configurations.TestMailConfiguration;
 import com.ndtm.passwordmanager.manage.SavedData;
 import com.ndtm.passwordmanager.manage.SavedDataService;
 import com.ndtm.passwordmanager.userActions.User;
@@ -9,28 +9,23 @@ import com.ndtm.passwordmanager.userActions.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /** TODO:
- * 1. изменить ссылки и title сайтов на их хеш
+ * 1. изменить ссылки и title сайтов на их encode
  */
 
 @RunWith(SpringRunner.class)
-@ComponentScan(basePackages = { "com.ndtm.passwordmanager.*" })
-@EntityScan("com.ndtm.passwordmanager.*")
-@ContextConfiguration(classes = {PasswordManagerApplication.class})
 @DataJpaTest
-@EnableJpaRepositories(basePackages = "com.ndtm.passwordmanager.repository")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ComponentScan(basePackages = { "com.ndtm.passwordmanager.*" })
+@Import(TestMailConfiguration.class)
 public class TestManagePassword {
 
     @Autowired
