@@ -113,6 +113,7 @@ public class AuthGui extends AuthMenuController {
         listLoginElements.add(loginField);
         listLoginElements.add(passwordField);
         listLoginElements.add(loginButton);
+        listLoginElements.add(errorLabel);
     }
 
     private void tuneRegisterMenu() {
@@ -268,7 +269,7 @@ public class AuthGui extends AuthMenuController {
 
     public static void hideLoginMenu() {
         if(currentMenuIsLogin) {
-            group.getChildren().remove(1, 4);
+            group.getChildren().remove(1, listLoginElements.size() + 1);
         }
     }
 

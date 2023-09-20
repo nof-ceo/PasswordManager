@@ -1,6 +1,5 @@
 package com.ndtm.passwordmanager.controller;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ndtm.passwordmanager.GUI.*;
 import com.ndtm.passwordmanager.userActions.User;
 import com.ndtm.passwordmanager.userActions.UserService;
