@@ -18,10 +18,8 @@ import java.util.*;
 import java.util.List;
 
 /** TODO:
- *  1. Сделать ForkJoinPool для tuneX
- *  2. Email sender
  *  3. Мб есть вариант исправить исчезновение register menu при повторном нажатии на register без переменной currentMenuIsLogin
- *  4. Многопоточность
+ *  4. javafx через Task
  *  5. Индексация бд для оптимизации запросов
  */
 
@@ -46,7 +44,7 @@ public class AuthGui extends AuthMenuController {
     }
 
     public void closeAuthWindow() {
-        StageManager.currentStage.hide();
+        StageManager.currentStage.close();
     }
 
     public void setAuthGui(Group groupFromStageManager) {
@@ -94,6 +92,7 @@ public class AuthGui extends AuthMenuController {
         EventHandler<MouseEvent> mouseReleased = event -> {
             try {
                 if(loginButtonClicked(loginField.getText(), passwordField.getText())) {
+                    group.getChildren().clear();
                     closeAuthWindow();
                     StageManager.openPasswordManagerGui();
                 } else {
@@ -282,7 +281,7 @@ public class AuthGui extends AuthMenuController {
 
     public static void hideRegisterMenu() {
         if (!currentMenuIsLogin) {
-            group.getChildren().remove(1, 10);
+            group.getChildren().remove(1, listRegisterElements.size() + 1);
         }
     }
 
