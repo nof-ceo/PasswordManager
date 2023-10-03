@@ -5,10 +5,13 @@ import com.ndtm.passwordmanager.userActions.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 
 public class PasswordManagerMainController {
     private double mousePressedX;
     private double mousePressedY;
+
+    private MainGui mainGui;
 
     @FXML
     private Label userLogin;
@@ -17,9 +20,16 @@ public class PasswordManagerMainController {
     private Label userEmail;
 
     @FXML
+    private Rectangle rectangleUnderShieldIcon;
+
+    @FXML
+    private Rectangle passwordsMenuButton;
+
+    @FXML
     public void initialize() {
         userLogin.setText(UserService.currentActiveUser.getLogin());
         userEmail.setText(UserService.currentActiveUser.getEmail());
+        mainGui = new MainGui();
     }
 
     @FXML
@@ -34,5 +44,23 @@ public class PasswordManagerMainController {
     public void mousePoint(MouseEvent event) {
         mousePressedX = event.getX();
         mousePressedY = event.getY();
+    }
+
+    @FXML
+    public void enteredToPasswordButtonBorder() {
+        rectangleUnderShieldIcon.setOpacity(1.0);
+    }
+
+    @FXML
+    public void exitedFromPasswordButtonBorder() {
+        rectangleUnderShieldIcon.setOpacity(0.0);
+    }
+
+    @FXML
+    public void selectPasswordsMenu() {
+        passwordsMenuButton.setOpacity(1.0);
+
+        // сделать вызов без static
+        mainGui.showPasswordsMenu();
     }
 }
