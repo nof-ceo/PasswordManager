@@ -15,39 +15,48 @@ import java.util.concurrent.Executors;
 /** TODO:
  */
 public abstract class StageManager extends Stage {
-
     AuthGui authGui = new AuthGui();
 
     public static Stage currentStage;
 
+    public static Group group;
+
+    private static Scene scene;
+
     public static ExecutorService executor = Executors.newFixedThreadPool(5);
 
     public void openAuthGui() throws IOException {
-        Group group = new Group();
+        group = new Group();
         Parent root;
 
         root = FXMLLoader.load(PasswordManagerApplication.class.getResource("authPasswordManager.fxml"));
         group.getChildren().add(root);
         authGui.setAuthGui(group);
 
-        Scene scene = new Scene(group, 400, 600);
+        scene = new Scene(group, 400, 600);
         scene.setFill(Color.TRANSPARENT);
         settingStage(scene);
-
     }
 
 
     public static void openPasswordManagerGui() throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(PasswordManagerApplication.class.getResource("passwordManagerMain.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        group.getChildren().add(fxmlLoader.load());
+
+        scene.setRoot(group);
         scene.setFill(Color.TRANSPARENT);
-        settingStage(scene);
+
+        currentStage.setWidth(1000);
+        currentStage.setHeight(600);
+        currentStage.setX(currentStage.getX()/2);
+        currentStage.show();
     }
 
     private static void settingStage(Scene scene) throws IOException{
         Stage stage = new Stage();
-        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.show();
         currentStage = stage;
     }
