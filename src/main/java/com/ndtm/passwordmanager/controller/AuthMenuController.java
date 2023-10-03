@@ -110,15 +110,14 @@ public class AuthMenuController {
                 userService.sendVerificationLink(user);
             } catch (Exception e) {
                 throw new RuntimeException(e);
+            } finally {
+                clearRequirementIcons();
+                firstNameField.clear();
+                surNameField.clear();
+                emailField.clear();
+                loginField.clear();
+                passwordField.clear();
             }
-
-            clearRequirementIcons();
-            firstNameField.clear();
-            surNameField.clear();
-            emailField.clear();
-            loginField.clear();
-            passwordField.clear();
-
         });
 
         continueRegisterNotification(emailField.getText());
