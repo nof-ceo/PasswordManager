@@ -16,14 +16,14 @@ import static com.ndtm.passwordmanager.GUI.AuthGui.*;
 
 public class AuthMenuController {
 
-    private UserService userService = new UserService();
-
     @FXML
     public Label buttonForChooseLogin;
     @FXML
     public Label buttonForChooseRegister;
     @FXML
     public Rectangle uselessDesignElement;
+
+    private UserService userService = new UserService();
 
     private static Label staticButtonForChooseLogin;
     private static Label staticButtonForChooseRegister;
@@ -33,6 +33,13 @@ public class AuthMenuController {
 
     private double mousePressedX;
     private double mousePressedY;
+
+    @FXML
+    public void initialize() {
+        staticButtonForChooseLogin = buttonForChooseLogin;
+        staticButtonForChooseRegister = buttonForChooseRegister;
+        staticUselessDesignElement = uselessDesignElement;
+    }
 
     @FXML
     public void dragWindow(MouseEvent event) {
@@ -70,13 +77,6 @@ public class AuthMenuController {
 
         AuthGui.hideLoginMenu();
         AuthGui.showRegisterMenu();
-    }
-
-    @FXML
-    public void initialize() {
-        staticButtonForChooseLogin = buttonForChooseLogin;
-        staticButtonForChooseRegister = buttonForChooseRegister;
-        staticUselessDesignElement = uselessDesignElement;
     }
 
     public void typedInEmailField(String email) {
