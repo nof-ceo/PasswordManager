@@ -38,6 +38,12 @@ public class AuthGui extends AuthMenuController {
 
     private static boolean currentMenuIsLogin = true;
 
+    public AuthGui(Group group) {
+        this.group = group;
+        tuneLoginMenu();
+        tuneRegisterMenu();
+    }
+
     public static void setPointOfWindow(double x, double y) {
         StageManager.currentStage.setX(x);
         StageManager.currentStage.setY(y);
@@ -45,12 +51,6 @@ public class AuthGui extends AuthMenuController {
 
     public void closeAuthWindow() {
         StageManager.currentStage.close();
-    }
-
-    public void setAuthGui(Group groupFromStageManager) {
-        group = groupFromStageManager;
-        tuneLoginMenu();
-        tuneRegisterMenu();
     }
 
     private void tuneLoginMenu() {
@@ -268,7 +268,7 @@ public class AuthGui extends AuthMenuController {
 
     public static void hideLoginMenu() {
         if(currentMenuIsLogin) {
-            group.getChildren().remove(1, listLoginElements.size() + 1);
+            group.getChildren().remove(1, group.getChildren().size());
         }
     }
 
@@ -281,7 +281,7 @@ public class AuthGui extends AuthMenuController {
 
     public static void hideRegisterMenu() {
         if (!currentMenuIsLogin) {
-            group.getChildren().remove(1, listRegisterElements.size() + 1);
+            group.getChildren().remove(1, group.getChildren().size());
         }
     }
 
