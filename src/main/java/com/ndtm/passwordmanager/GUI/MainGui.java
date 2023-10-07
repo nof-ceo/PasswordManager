@@ -1,16 +1,20 @@
 package com.ndtm.passwordmanager.GUI;
 
 import com.ndtm.passwordmanager.controller.PasswordManagerMainController;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import javafx.scene.input.MouseEvent;
 
 
 public class MainGui extends PasswordManagerMainController {
 
-    private static Group group = StageManager.group;
+    public static Group group = StageManager.group;
 
-    public boolean passwordMenuShown = false;
+    private boolean passwordMenuShown = false;
 
     public static void setPointOfWindow(double x, double y) {
         StageManager.currentStage.setX(x);
@@ -18,8 +22,9 @@ public class MainGui extends PasswordManagerMainController {
     }
 
     public void showPasswordsMenu() {
-        if(!passwordMenuShown)
+        if(!passwordMenuShown) {
             setAddDataButton();
+        }
     }
 
     // выполнять, если не выбран passwords
@@ -34,9 +39,18 @@ public class MainGui extends PasswordManagerMainController {
         addButton.setFitWidth(30);
         addButton.setFitHeight(30);
 
+        EventHandler<MouseEvent> mouseClicked = event -> {
+            try {
+                AddDataGui addDataGui = new AddDataGui();
+                addDataGui.showAddDataGui();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        };
+        addButton.setOnMouseClicked(mouseClicked);
+
         group.getChildren().add(addButton);
         passwordMenuShown = true;
-        System.out.println(1);
     }
 
 }
