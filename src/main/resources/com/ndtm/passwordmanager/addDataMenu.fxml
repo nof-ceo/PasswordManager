@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-border-radius: 30; -fx-background-radius: 30; -fx-background-size: 400 400; -fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ndtm.passwordmanager.controller.AddDataMenuController">
+   <children>
+      <TextField fx:id="titleField" layoutX="30.0" layoutY="33.0" prefHeight="26.0" prefWidth="340.0" promptText="Title" style="-fx-background-color: #c3c3c3; -fx-background-radius: 5;">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="13.0" />
+         </font></TextField>
+      <TextField fx:id="urlField" layoutX="30.0" layoutY="75.0" prefHeight="26.0" prefWidth="340.0" promptText="URL" style="-fx-background-color: #c3c3c3; -fx-background-radius: 5;">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="13.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="loginField" layoutX="31.0" layoutY="123.0" prefHeight="26.0" prefWidth="160.0" promptText="Login" style="-fx-background-color: #c3c3c3; -fx-background-radius: 5;">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="13.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="passwordField" layoutX="210.0" layoutY="123.0" prefHeight="26.0" prefWidth="160.0" promptText="Password" style="-fx-background-color: #c3c3c3; -fx-background-radius: 5;">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="13.0" />
+         </font>
+      </TextField>
+      <Button layoutX="133.0" layoutY="261.0" mnemonicParsing="false" onMouseClicked="#addingDataBlock" prefHeight="73.0" prefWidth="133.0" style="-fx-background-color: #c1b3ff; -fx-background-radius: 20; -fx-border-radius: 20;" text="Add" textFill="#9787e4">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="34.0" />
+         </font>
+      </Button>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="30.0" layoutX="-3.0" layoutY="-8.0" onMouseDragged="#dragWindow" onMousePressed="#mousePoint" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="404.0" />
+      <Text fx:id="textTitleCannotBeEmpty" fill="#f9665e" layoutX="105.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title field cannot be empty" visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="titleFieldWarning" fill="#f9665e" layoutX="372.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="21.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>

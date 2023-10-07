@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 /** TODO:
  */
 public abstract class StageManager extends Stage {
-    AuthGui authGui = new AuthGui();
+    AuthGui authGui;
 
     public static Stage currentStage;
 
@@ -31,7 +31,7 @@ public abstract class StageManager extends Stage {
 
         root = FXMLLoader.load(PasswordManagerApplication.class.getResource("authPasswordManager.fxml"));
         group.getChildren().add(root);
-        authGui.setAuthGui(group);
+        authGui = new AuthGui(group);
 
         scene = new Scene(group, 400, 600);
         scene.setFill(Color.TRANSPARENT);
