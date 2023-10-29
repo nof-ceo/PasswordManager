@@ -1,7 +1,6 @@
 package com.ndtm.passwordmanager.userTest;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.ndtm.passwordmanager.configurations.TestMailConfiguration;
+import com.ndtm.passwordmanager.configurations.TestMailConfigurationForAuthTest;
 import com.ndtm.passwordmanager.userActions.User;
 import com.ndtm.passwordmanager.userActions.UserService;
 import org.junit.Test;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ComponentScan(basePackages = "com.ndtm.passwordmanager.userActions")
-@Import(TestMailConfiguration.class)
+@Import(TestMailConfigurationForAuthTest.class)
 public class TestAuthMenu {
 
     @Autowired
