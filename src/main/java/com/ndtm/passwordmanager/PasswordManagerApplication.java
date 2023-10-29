@@ -14,6 +14,7 @@ public class PasswordManagerApplication extends Application {
 
 	@Override
     public void start(Stage stage) throws IOException{
+        //headless(false) поставить
         applicationContext = new SpringApplicationBuilder(StockUiApp.class).run();
 
         applicationContext.publishEvent(new StageReadyEvent(stage));

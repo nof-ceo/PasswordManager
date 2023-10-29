@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 
 import java.io.IOException;
@@ -23,15 +24,16 @@ import java.util.List;
  *  5. Индексация бд для оптимизации запросов
  */
 
-public class AuthGui extends AuthMenuController {
+public class AuthGui extends StageManager{
+
+    AuthMenuController authMenuController = new AuthMenuController();
 
     private final UserService userService = new UserService();
 
     private static Group group;
+    static Pane registerPane;
 
     private static final List listLoginElements = new ArrayList();
-    private static final List listRegisterElements = new ArrayList();
-
     public static final ImageView loginRequirements = new ImageView();
     public static final ImageView emailRequirements = new ImageView();
     public static final ImageView passwordRequirements = new ImageView();
@@ -91,10 +93,10 @@ public class AuthGui extends AuthMenuController {
         loginButton.setText("Login");
         EventHandler<MouseEvent> mouseReleased = event -> {
             try {
-                if(loginButtonClicked(loginField.getText(), passwordField.getText())) {
+                if(authMenuController.loginButtonClicked(loginField.getText(), passwordField.getText())) {
                     group.getChildren().clear();
                     closeAuthWindow();
-                    StageManager.openPasswordManagerGui();
+                    openPasswordManagerGui();
                 } else {
                     errorLabel.setOpacity(100.0);
                 }
@@ -119,7 +121,7 @@ public class AuthGui extends AuthMenuController {
         TextField firstNameField = new TextField();
         firstNameField.setPrefWidth(100);
         firstNameField.setLayoutX(87);
-        firstNameField.setLayoutY(176);
+        firstNameField.setLayoutY(83);
         firstNameField.setStyle("-fx-background-color: #c3c3c3;" +
                                 "-fx-background-radius: 20 20 20 20;");
         firstNameField.setPromptText("First name");
@@ -127,7 +129,7 @@ public class AuthGui extends AuthMenuController {
         TextField surNameField = new TextField();
         surNameField.setPrefWidth(100);
         surNameField.setLayoutX(212);
-        surNameField.setLayoutY(176);
+        surNameField.setLayoutY(83);
         surNameField.setStyle("-fx-background-color: #c3c3c3;" +
                                "-fx-background-radius: 20 20 20 20;");
         surNameField.setPromptText("Surname");
@@ -135,13 +137,13 @@ public class AuthGui extends AuthMenuController {
         TextField emailField = new TextField();
         emailField.setMinWidth(226);
         emailField.setLayoutX(87);
-        emailField.setLayoutY(230);
+        emailField.setLayoutY(137);
         emailField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         emailField.setPromptText("Email");
-        setRequirementsPos(emailRequirements, 233);
+        setRequirementsPos(emailRequirements, 140);
         EventHandler<KeyEvent> keyTypedEmailField = event -> {
-            typedInEmailField(emailField.getText());
+            authMenuController.typedInEmailField(emailField.getText());
         };
 
         emailField.setOnKeyTyped(keyTypedEmailField);
@@ -149,26 +151,26 @@ public class AuthGui extends AuthMenuController {
         TextField loginField = new TextField();
         loginField.setMinWidth(226);
         loginField.setLayoutX(87);
-        loginField.setLayoutY(285);
+        loginField.setLayoutY(192);
         loginField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         loginField.setPromptText("Login");
-        setRequirementsPos(loginRequirements, 288);
+        setRequirementsPos(loginRequirements, 195);
         EventHandler<KeyEvent> keyTypedLoginField = event -> {
-            typedInLoginField(loginField.getText());
+            authMenuController.typedInLoginField(loginField.getText());
         };
         loginField.setOnKeyTyped(keyTypedLoginField);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setMinWidth(226);
         passwordField.setLayoutX(87);
-        passwordField.setLayoutY(340);
+        passwordField.setLayoutY(247);
         passwordField.setStyle("-fx-background-color: #c3c3c3;" +
                 "-fx-background-radius: 20 20 20 20;");
         passwordField.setPromptText("Password");
-        setRequirementsPos(passwordRequirements, 343);
+        setRequirementsPos(passwordRequirements, 250);
         EventHandler<KeyEvent> keyTypedPasswordField = event -> {
-                typeInPasswordField(passwordField.getText());
+                authMenuController.typeInPasswordField(passwordField.getText());
         };
         passwordField.setOnKeyTyped(keyTypedPasswordField);
 
@@ -177,7 +179,7 @@ public class AuthGui extends AuthMenuController {
         registerButton.minHeight(46);
         registerButton.minWidth(116);
         registerButton.setLayoutX(150);
-        registerButton.setLayoutY(450);
+        registerButton.setLayoutY(357);
         registerButton.setStyle("-fx-background-radius: 30 30 30 30;" +
                                 "-fx-border-radius: 30 30 30 30;" +
                                 "-fx-background-color: transparent;" +
@@ -190,7 +192,7 @@ public class AuthGui extends AuthMenuController {
                         userService.checkLoginFieldForCorrectAndNotNull(loginField.getText()) && !firstNameField.getText().isBlank() &&
                             !surNameField.getText().isBlank()) {
 
-                registerButtonClicked(firstNameField, surNameField, loginField, passwordField, emailField);
+                authMenuController.registerButtonClicked(firstNameField, surNameField, loginField, passwordField, emailField);
 
             } else {
                 invalidRegisterAttemptNotification();
@@ -198,40 +200,31 @@ public class AuthGui extends AuthMenuController {
         };
         registerButton.setOnMouseClicked(registerButtonClicked);
 
-        listRegisterElements.add(firstNameField);
-        listRegisterElements.add(surNameField);
-        listRegisterElements.add(emailField);
-        listRegisterElements.add(loginField);
-        listRegisterElements.add(passwordField);
-        listRegisterElements.add(registerButton);
-        listRegisterElements.add(emailRequirements);
-        listRegisterElements.add(loginRequirements);
-        listRegisterElements.add(passwordRequirements);
+        registerPane = new Pane(firstNameField, surNameField, emailField, loginField, passwordField, registerButton, emailRequirements, loginRequirements, passwordRequirements);
+        registerPane.setPrefSize(400, 503);
+        registerPane.setLayoutX(0);
+        registerPane.setLayoutY(93);
+        registerPane.setStyle("-fx-background-color: transparent;");
 
     }
 
     public static void showCorrectIcon(ImageView requirements) {
         if(requirements.getImage() == null || !requirements.getImage().getUrl().equals("src/main/resources/com/ndtm/" +
                 "passwordmanager/icons8-correct-104.png")) {
-            group.getChildren().remove(requirements);
 
             Image image = new Image("file:src/main/resources/com/ndtm/passwordmanager/icons8-correct-104.png");
             requirements.setImage(image);
 
-            group.getChildren().add(requirements);
         }
     }
 
     public static void showWrongIcon(ImageView requirements, boolean inputTextIsNull) {
-        if(inputTextIsNull)
-            group.getChildren().remove(requirements);
+        if(inputTextIsNull) {
+            requirements.setImage(null);
+        }
         else {
-            group.getChildren().remove(requirements);
-
             Image image = new Image("file:src/main/resources/com/ndtm/passwordmanager/icons8-wrong-104.png");
             requirements.setImage(image);
-
-            group.getChildren().add(requirements);
         }
     }
 
@@ -281,13 +274,13 @@ public class AuthGui extends AuthMenuController {
 
     public static void hideRegisterMenu() {
         if (!currentMenuIsLogin) {
-            group.getChildren().remove(1, group.getChildren().size());
+            group.getChildren().remove(registerPane);
         }
     }
 
     public static void showRegisterMenu() {
         if(currentMenuIsLogin) {
-            group.getChildren().addAll(listRegisterElements);
+            group.getChildren().add(registerPane);
             currentMenuIsLogin = false;
         }
     }

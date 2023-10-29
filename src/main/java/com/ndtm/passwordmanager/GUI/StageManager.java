@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,13 +40,13 @@ public abstract class StageManager extends Stage {
     }
 
 
-    public static void openPasswordManagerGui() throws IOException {
-
+    public void openPasswordManagerGui() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PasswordManagerApplication.class.getResource("passwordManagerMain.fxml"));
         group.getChildren().add(fxmlLoader.load());
 
         scene.setRoot(group);
         scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(PasswordManagerApplication.class.getResource("style.css").toExternalForm());
 
         currentStage.setWidth(1000);
         currentStage.setHeight(600);
@@ -53,7 +54,7 @@ public abstract class StageManager extends Stage {
         currentStage.show();
     }
 
-    private static void settingStage(Scene scene) throws IOException{
+    private static void settingStage(Scene scene) {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);

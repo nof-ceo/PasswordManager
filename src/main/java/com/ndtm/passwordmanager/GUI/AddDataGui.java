@@ -10,8 +10,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class AddDataGui extends AddDataMenuController {
+public class AddDataGui extends StageManager {
     private static final Stage stage = new Stage();
+
+    private AddDataMenuController addDataMenuController = new AddDataMenuController();
 
     Scene scene;
 
@@ -28,7 +30,24 @@ public class AddDataGui extends AddDataMenuController {
     public void showAddDataGui() {
         if (!stage.isShowing()) {
             try {
-                MainGui.group.getChildren().forEach(x -> x.setDisable(true));
+                decreaseBrightness();
+
+                FXMLLoader fxmlLoader = new FXMLLoader(PasswordManagerApplication.class.getResource("addDataMenu.fxml"));
+
+                scene = new Scene(fxmlLoader.load());
+                scene.setFill(Color.TRANSPARENT);
+
+                stage.setScene(scene);
+                stage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void showEditDataGui() {
+        if(!stage.isShowing()) {
+            try {
                 decreaseBrightness();
 
                 FXMLLoader fxmlLoader = new FXMLLoader(PasswordManagerApplication.class.getResource("addDataMenu.fxml"));
@@ -45,7 +64,6 @@ public class AddDataGui extends AddDataMenuController {
     }
 
     public void closeAddDataGui() {
-        MainGui.group.getChildren().forEach(x -> x.setDisable(false));
         increaseBrightness();
 
         stage.close();
