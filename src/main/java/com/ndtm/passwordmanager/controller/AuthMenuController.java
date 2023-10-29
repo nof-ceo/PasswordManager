@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
-
 import static com.ndtm.passwordmanager.GUI.AuthGui.*;
 
 
@@ -110,17 +109,17 @@ public class AuthMenuController {
                 userService.sendVerificationLink(user);
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            } finally {
-                clearRequirementIcons();
-                firstNameField.clear();
-                surNameField.clear();
-                emailField.clear();
-                loginField.clear();
-                passwordField.clear();
             }
         });
 
         continueRegisterNotification(emailField.getText());
+
+        clearRequirementIcons();
+        firstNameField.clear();
+        surNameField.clear();
+        emailField.clear();
+        loginField.clear();
+        passwordField.clear();
 
         loginChosen();
     }
