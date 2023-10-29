@@ -1,5 +1,7 @@
 package com.ndtm.passwordmanager.manage;
 
+import com.ndtm.passwordmanager.userActions.UserService;
+
 import javax.persistence.*;
 
 /** TODO:
@@ -7,11 +9,11 @@ import javax.persistence.*;
  * 2. password должен быть закодирован, а не захеширован
  */
 @Entity
-@Table(name = "savedData")
+@Table(name = "saved_data")
 public class SavedData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "saved_data_id")
     private int id;
 
     @Column(name = "user_id", nullable = false)
@@ -20,7 +22,7 @@ public class SavedData {
     @Column(name = "site_title", nullable = false)
     private String siteTitle;
 
-    @Column(name = "site_url", nullable = false)
+    @Column(name = "site_url", nullable = true)
     private String siteUrl;
 
     @Column(nullable = true)
@@ -30,18 +32,25 @@ public class SavedData {
     private String password;
 
     @Column(name = "credit_card", nullable = true)
-    private byte[] creditCard;
+    private String  creditCard;
 
     @Column(name = "expired_date", nullable = true)
-    private byte[] expiredDate;
+    private String expiredDate;
 
     @Column(name = "cvv", nullable = true)
-    private byte[] cvv;
+    private String cvv;
 
     @Column(name = "phone_number", nullable = true)
-    private byte[] phoneNumber;
+    private String phoneNumber;
 
-    public SavedData(String siteTitle, String siteUrl, String login, String password, byte[] creditCard, byte[] expiredDate, byte[] cvv, byte[] phoneNumber) {
+    // изменить на false
+    @Column(name = "key_encryption", nullable = false)
+    private String key;
+
+    @Column(name = "init_vector", nullable = false)
+    private byte[] initVector;
+
+    public SavedData(String siteTitle, String siteUrl, String login, String password, String creditCard, String expiredDate, String cvv, String phoneNumber) {
         this.siteTitle = siteTitle;
         this.siteUrl = siteUrl;
         this.login = login;
@@ -50,6 +59,7 @@ public class SavedData {
         this.expiredDate = expiredDate;
         this.cvv = cvv;
         this.phoneNumber = phoneNumber;
+        this.userId = UserService.currentActiveUser.getId();
     }
 
     public SavedData() {
@@ -64,7 +74,7 @@ public class SavedData {
         this.id = id;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -104,36 +114,52 @@ public class SavedData {
         this.password = password;
     }
 
-    public byte[] getCreditCard() {
+    public String getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(byte[] creditCard) {
+    public void setCreditCard(String creditCard) {
         this.creditCard = creditCard;
     }
 
-    public byte[] getExpiredDate() {
+    public String getExpiredDate() {
         return expiredDate;
     }
 
-    public void setExpiredDate(byte[] expiredDate) {
+    public void setExpiredDate(String expiredDate) {
         this.expiredDate = expiredDate;
     }
 
-    public byte[] getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(byte[] cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
-    public byte[] getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(byte[] phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public byte[] getInitVector() {
+        return initVector;
+    }
+
+    public void setInitVector(byte[] initVector) {
+        this.initVector = initVector;
     }
 
     @Override
