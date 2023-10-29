@@ -28,7 +28,7 @@
             <Font name="Arial Rounded MT Bold" size="13.0" />
          </font>
       </TextField>
-      <Button layoutX="133.0" layoutY="261.0" mnemonicParsing="false" onMouseClicked="#addingDataBlock" prefHeight="73.0" prefWidth="133.0" style="-fx-background-color: #c1b3ff; -fx-background-radius: 20; -fx-border-radius: 20;" text="Add" textFill="#9787e4">
+      <Button fx:id="addButton" layoutX="133.0" layoutY="261.0" mnemonicParsing="false" onMouseClicked="#addingDataBlock" prefHeight="73.0" prefWidth="133.0" style="-fx-background-color: #c1b3ff; -fx-background-radius: 20; -fx-border-radius: 20;" text="Add" textFill="#9787e4">
          <font>
             <Font name="Arial Rounded MT Bold" size="34.0" />
          </font>
