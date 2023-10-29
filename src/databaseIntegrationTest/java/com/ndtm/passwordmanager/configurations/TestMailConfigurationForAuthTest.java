@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 @TestConfiguration
-public class TestMailConfiguration {
+public class TestMailConfigurationForAuthTest {
 
     @Bean
     public JavaMailSender mailSender() {
