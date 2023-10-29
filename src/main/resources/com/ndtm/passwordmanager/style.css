@@ -1,0 +1,28 @@
+.context-menu {
+  -fx-background-color: #807e7e;
+  -fx-border-color: transparent;
+  -fx-background-radius: 10;
+  -fx-text-fill: white;
+}
+
+.menu-item .label {
+  -fx-fill:red;
+    -fx-font-size: 12px;;
+    -fx-stroke:#C8CFD7;
+}
+
+.menu-item:focused .label {
+  -fx-text-fill: white;
+}
+.menu-item{
+    -fx-border-color: transparent;
+    -fx-border-width:0.50px;
+
+}
+.menu-item:focused {
+     -fx-background: -fx-accent;
+     -fx-background-color: #575757;
+     -fx-text-fill: -fx-selection-bar-text;
+     -fx-border-radius: 10;
+     -fx-background-radius: 10;
+}
